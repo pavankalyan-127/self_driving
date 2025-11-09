@@ -10,7 +10,7 @@ import threading
 # ========================
 # CONFIGURATION
 # ========================
-MODEL_PATH = r"C:\Users\pavan\Downloads\DETR_Obg\self_driving\detr_finetuned_selfdriving_v2"
+MODEL_PATH = "pavankalyan123456/selfdriving-detr"
 # "  # 👈 your local model folder
 
 # ========================
@@ -170,5 +170,6 @@ st.caption("🚀 Built with Hugging Face DETR + Streamlit by Pavan ")
 
 # from transformers import DetrForObjectDetection, DetrImageProcessor
 # print('✅ DETR is working!')
+
 
 
