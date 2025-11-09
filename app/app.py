@@ -16,6 +16,30 @@ from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
 import av
 
 # =========================================================
+# 🔧 PATCH: Silence aioice/aiortc event-loop errors
+# =========================================================
+import logging, asyncio, atexit
+
+logging.getLogger("aioice").setLevel(logging.ERROR)
+logging.getLogger("aiortc").setLevel(logging.ERROR)
+logging.getLogger("asyncio").setLevel(logging.ERROR)
+
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
+@atexit.register
+def cleanup():
+    """Ensure clean shutdown of asyncio loop."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.stop()
+    except Exception:
+        pass
+
+# =========================================================
 # STREAMLIT CONFIG
 # =========================================================
 st.set_page_config(page_title="🚗 Self-Driving Object Detection", layout="wide")
@@ -60,7 +84,6 @@ def detect_objects(image: Image.Image):
             fill="white",
         )
     return image
-
 
 # =========================================================
 # 📸 MODE SELECTION
