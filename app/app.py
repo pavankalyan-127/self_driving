@@ -134,49 +134,55 @@ if video_file is not None:
 # =========================================================
 # 📷 LIVE CAMERA CAPTURE SECTION
 # =========================================================
-st.header("📷 Live Camera Detection")
+# =========================================================
+# 🌐 BROWSER LIVE CAMERA STREAM (WORKS ON CLOUD)
+# =========================================================
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
+import av  # For frame processing
 
-start_cam = st.button("🎬 Start Live Camera")
+st.header("🌐 Live Video Detection (Browser-based)")
 
-if start_cam:
-    cap = cv2.VideoCapture(0)
-    cv2.setNumThreads(0)
-    stframe = st.empty()
-    st.info("Press **Stop Live Camera** to end stream.")
+class VideoProcessor(VideoProcessorBase):
+    def __init__(self):
+        self.model = model
+        self.processor = processor
 
-    stop_button = st.button("🛑 Stop Live Camera")
-    while cap.isOpened() and not stop_button:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    def recv(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+        image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        image_pil = Image.fromarray(image_rgb)
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        image_pil = Image.fromarray(frame_rgb)
-
-        inputs = processor(images=image_pil, return_tensors="pt").to(device)
-        outputs = model(**inputs)
+        # Run DETR inference
+        inputs = self.processor(images=image_pil, return_tensors="pt").to(device)
+        outputs = self.model(**inputs)
         target_sizes = torch.tensor([image_pil.size[::-1]]).to(device)
-        results = processor.post_process_object_detection(
+        results = self.processor.post_process_object_detection(
             outputs, target_sizes=target_sizes, threshold=0.6
         )[0]
 
+        # Draw boxes
         draw = ImageDraw.Draw(image_pil)
         for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
             box = [round(i, 2) for i in box.tolist()]
             draw.rectangle(box, outline="cyan", width=3)
             draw.text(
                 (box[0], box[1]),
-                f"{model.config.id2label[label.item()]} {round(score.item(), 2)}",
+                f"{self.model.config.id2label[label.item()]} {round(score.item(), 2)}",
                 fill="white",
             )
 
-        stframe.image(image_pil, caption="Live Feed", use_container_width=True)
-        time.sleep(0.05)  # controls FPS
+        return av.VideoFrame.from_ndarray(cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR), format="bgr24")
 
-    cap.release()
-    st.success("🛑 Live camera stopped.")
+
+webrtc_streamer(
+    key="selfdriving-live",
+    mode=WebRtcMode.SENDRECV,
+    video_processor_factory=VideoProcessor,
+    media_stream_constraints={"video": True, "audio": False},
+)
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.caption("🚀 Built with Hugging Face DETR + Streamlit by Pavan Kalyan")
+
