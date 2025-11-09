@@ -4,7 +4,7 @@ streamlit==1.40.0
 # === PyTorch and Hugging Face ===
 torch==2.2.2
 transformers==4.44.2
-huggingface-hub==0.23.0
+huggingface-hub==0.23.2
 timm==0.9.12
 
 # === Vision / Utility Libraries ===
@@ -14,4 +14,4 @@ numpy==1.26.4
 
 # === Real-time Video Streaming ===
 streamlit-webrtc==0.47.7
-av==10.0.0
+av==9.2.0
