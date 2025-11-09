@@ -1,14 +1,10 @@
 streamlit==1.40.0
-torch==2.2.2
+torch>=2.2.0
 transformers==4.44.2
-huggingface-hub==0.23.2
-timm==0.9.12
+timm>=0.9.12
 opencv-python-headless==4.9.0.80
 Pillow==10.2.0
 numpy==1.26.4
-
-# ✅ Stable real-time video stack (tested)
-streamlit-webrtc==0.47.7
-aiortc==1.5.0
-aioice==0.9.0
-av==14.1.0
+huggingface-hub>=0.23.0
+streamlit-webrtc>=0.47.7
+av>=10.0.0
