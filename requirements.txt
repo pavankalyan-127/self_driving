@@ -1,0 +1,15 @@
+<<<<<<< HEAD
+streamlit==1.40.0
+torch>=2.2.0
+transformers==4.44.2
+opencv-python-headless==4.9.0.80
+Pillow==10.2.0
+numpy==1.26.4
+=======
+streamlit==1.40.0
+torch>=2.2.0
+transformers==4.44.2
+opencv-python-headless==4.9.0.80
+Pillow==10.2.0
+numpy==1.26.4
+>>>>>>> 3c69fcf9 (detr_finetuned_selfdriving_v2)
