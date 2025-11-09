@@ -1,12 +1,17 @@
+# === Streamlit App Core ===
 streamlit==1.40.0
-torch>=2.2.0
+
+# === PyTorch and Hugging Face ===
+torch==2.2.2
 transformers==4.44.2
-timm>=0.9.12
+huggingface-hub==0.23.0
+timm==0.9.12
+
+# === Vision / Utility Libraries ===
 opencv-python-headless==4.9.0.80
 Pillow==10.2.0
 numpy==1.26.4
-huggingface-hub>=0.23.0
-streamlit-webrtc>=0.47.7
-av>=10.0.0
 
-
+# === Real-time Video Streaming ===
+streamlit-webrtc==0.47.7
+av==10.0.0
