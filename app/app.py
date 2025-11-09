@@ -188,15 +188,27 @@ elif option == "Upload Video (MP4)":
                 pass
 
 # =========================================================
-# 4️⃣ TRUE LIVE CAMERA DETECTION (Continuous Stream)
+
+# 4️⃣ TRUE LIVE CAMERA DETECTION (Continuous Stream + Save Option)
 # =========================================================
 elif option == "Live Camera Detection":
     st.info("🎥 Starting live detection — allow camera access in your browser.")
+
+    # Ask user if they want to save the detected video output
+    save_live = st.radio(
+        "💾 Do you want to save detected live video output?",
+        ["No", "Yes"],
+        index=0,
+        horizontal=True
+    )
 
     class LiveVideoProcessor(VideoProcessorBase):
         def __init__(self):
             self.model = model
             self.processor = processor
+            self.frames = []
+            self.frame_size = None
+            self.save_output = (save_live == "Yes")
 
         def recv(self, frame):
             img = frame.to_ndarray(format="bgr24")
@@ -221,18 +233,45 @@ elif option == "Live Camera Detection":
                     fill="white",
                 )
 
-            # Return processed frame
-            return av.VideoFrame.from_ndarray(cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR), format="bgr24")
+            detected_frame = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
 
-    webrtc_streamer(
+            # Save frames if user selected "Yes"
+            if self.save_output:
+                self.frames.append(detected_frame)
+                if self.frame_size is None:
+                    self.frame_size = (detected_frame.shape[1], detected_frame.shape[0])
+
+            return av.VideoFrame.from_ndarray(detected_frame, format="bgr24")
+
+        def save_video(self):
+            """Save the recorded frames as AVI."""
+            if self.save_output and self.frames:
+                output_path = "detr_live_output.avi"
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                out = cv2.VideoWriter(output_path, fourcc, 20.0, self.frame_size)
+                for f in self.frames:
+                    out.write(f)
+                out.release()
+                return output_path
+            return None
+
+    # Create processor instance
+    processor_instance = LiveVideoProcessor()
+
+    # Start WebRTC stream
+    ctx = webrtc_streamer(
         key="live_selfdriving",
         mode=WebRtcMode.SENDRECV,
-        video_processor_factory=LiveVideoProcessor,
+        video_processor_factory=lambda: processor_instance,
         media_stream_constraints={"video": True, "audio": False},
     )
 
-# =========================================================
-# FOOTER
-# =========================================================
-st.markdown("---")
-st.caption("🚀 Built with Hugging Face DETR + Streamlit + WebRTC by Pavan Kalyan")
+    # Stop & Save button if user enabled saving
+    if save_live == "Yes" and ctx.video_processor:
+        if st.button("🛑 Stop & Save Video"):
+            path = ctx.video_processor.save_video()
+            if path:
+                st.success(f"🎬 Live detection saved as `{path}`")
+            else:
+                st.warning("⚠️ No frames captured yet.")
+
