@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import os
 import torch
 import streamlit as st
@@ -164,6 +164,7 @@ st.caption("🚀 Built with Hugging Face DETR + Streamlit by Pavan ")
 
 # from transformers import DetrForObjectDetection, DetrImageProcessor
 # print('✅ DETR is working!')
+
 =======
 import os
 import torch
