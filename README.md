@@ -42,7 +42,7 @@ This project uses **Deformable DETR** (by SenseTime) and optionally YOLO models 
 4. Non-max suppression (NMS)  
 5. Label & confidence assignment
 6. 
-# 📊 **Dataset**
+#  **Dataset**
 
 ### **Total Images**: 30,000+  
 ### **Classes (10)**:
@@ -60,5 +60,6 @@ https://selfdrivingobjectdetection.streamlit.app/
 ![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_2.2.jpg?raw=true)
 ![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_3.jpg?raw=true)
 ![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_3.3.jpg?raw=true)
+
 
 
