@@ -49,14 +49,16 @@ This project uses **Deformable DETR** (by SenseTime) and optionally YOLO models 
 
 
 Dataset included highway, urban, and mixed driving scenarios with varying lighting and weather conditions.
-
+# deployment link
+https://selfdrivingobjectdetection.streamlit.app/
 
 #  **Detection Results**
 
-![image alt]()
-![image alt]()
-![image alt]()
-![image alt]()
-![image alt]()
-![image alt]()
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/self_1.jpg?raw=true)
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/self_1.1.jpg?raw=true)
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_2.jpg?raw=true)
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_2.2.jpg?raw=true)
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_3.jpg?raw=true)
+![image alt](https://github.com/pavankalyan-127/self_driving/blob/main/car_3.3.jpg?raw=true)
+
 
